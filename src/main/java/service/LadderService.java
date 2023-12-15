@@ -5,6 +5,7 @@ import domain.LadderFactory;
 import domain.Participant;
 import domain.RandomBasedBarGenerateStrategy;
 
+import java.util.Collections;
 import java.util.List;
 
 public class LadderService {
@@ -25,5 +26,9 @@ public class LadderService {
 
     public Ladder getLadder() {
         return ladder;
+    }
+
+    public List<Participant> getParticipants() {
+        return Collections.unmodifiableList(participantList);
     }
 }

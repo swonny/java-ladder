@@ -22,21 +22,14 @@ public class LadderController {
     }
 
     public void run() {
+        final LadderService ladderService = initializeLadderService();
+        printLadder(ladderService.getLadder(), ladderService.getParticipants());
+    }
+
+    private LadderService initializeLadderService() {
         final List<Participant> participants = readParticipants();
         final int ladderHeight = readLadderHeight();
-        initializeLadderService(participants, ladderHeight);
-    }
-
-    private LadderService initializeLadderService(final List<Participant> participants, final int ladderHeight) {
-        final LadderService ladderService = LadderService.of(ladderHeight, participants);
-        final Ladder ladder = ladderService.getLadder();
-        outputView.printLadder(LadderDto.from(ladder), participants);
-
-        return ladderService;
-    }
-
-    private int readLadderHeight() {
-        return inputView.readLadderHeight();
+        return LadderService.of(ladderHeight, participants);
     }
 
     private List<Participant> readParticipants() {
@@ -45,5 +38,14 @@ public class LadderController {
         return participantNames.stream()
                                .map(Participant::new)
                                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private int readLadderHeight() {
+        return inputView.readLadderHeight();
+    }
+
+    private void printLadder(final Ladder ladder, final List<Participant> participants) {
+        final LadderDto ladderDto = LadderDto.from(ladder);
+        outputView.printLadder(ladderDto, participants);
     }
 }
