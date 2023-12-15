@@ -17,6 +17,11 @@ public class LadderController {
 
     public void run() {
         final List<Participant> participants = readParticipants();
+        final int ladderHeight = readLadderHeight();
+    }
+
+    private int readLadderHeight() {
+        return inputView.readLadderHeight();
     }
 
     private List<Participant> readParticipants() {
