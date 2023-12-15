@@ -1,6 +1,8 @@
 package domain;
 
+import java.util.List;
+
 public interface BarGenerateStrategy {
 
-    boolean generate();
+    List<Boolean> generate(final int barCount);
 }

@@ -24,7 +24,7 @@ public class LadderController {
     public void run() {
         final List<Participant> participants = readParticipants();
         final int ladderHeight = readLadderHeight();
-        final LadderService ladderService = initializeLadderService(participants, ladderHeight);
+        initializeLadderService(participants, ladderHeight);
     }
 
     private LadderService initializeLadderService(final List<Participant> participants, final int ladderHeight) {
