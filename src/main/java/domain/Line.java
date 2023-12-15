@@ -10,6 +10,10 @@ public class Line {
         this.bars = bars;
     }
 
+    public List<Boolean> getBars() {
+        return bars;
+    }
+
     @Override
     public String toString() {
         return "Line{" +
