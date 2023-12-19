@@ -4,6 +4,7 @@ package domain;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -30,5 +31,19 @@ class ParticipantTest {
             assertThatThrownBy(() -> new Participant(invalidLengthName))
                     .isInstanceOf(IllegalArgumentException.class);
         }
+    }
+
+    @Test
+    void 참여자_위치를_이동할_수_있다() {
+        // given
+        final Participant 참여자 = new Participant("참여자");
+        final Position 참여자_위치 = new Position(0, 0);
+
+        // when
+        참여자.updatePosition(참여자_위치);
+
+        // then
+        assertThat(참여자.getPosition())
+                .isEqualTo(new Position(0, 0));
     }
 }
