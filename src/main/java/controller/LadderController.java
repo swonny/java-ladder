@@ -2,7 +2,9 @@ package controller;
 
 import controller.dto.LadderDto;
 import domain.Ladder;
+import domain.LadderFactory;
 import domain.Participant;
+import domain.RandomBasedBarGenerateStrategy;
 import service.LadderService;
 import view.InputView;
 import view.OutputView;
@@ -27,17 +29,24 @@ public class LadderController {
     }
 
     private LadderService initializeLadderService() {
-        final List<Participant> participants = readParticipants();
-        final int ladderHeight = readLadderHeight();
-        return LadderService.of(ladderHeight, participants);
+        final List<Participant> participants = createParticipants();
+        final Ladder ladder = createLadder(participants.size());
+
+        return new LadderService(ladder, participants);
     }
 
-    private List<Participant> readParticipants() {
+    private List<Participant> createParticipants() {
         final List<String> participantNames = inputView.readParticipants();
 
         return participantNames.stream()
                                .map(Participant::new)
                                .collect(Collectors.toUnmodifiableList());
+    }
+
+    private Ladder createLadder(final int participantSize) {
+        final int ladderHeight = readLadderHeight();
+
+        return LadderFactory.of(new RandomBasedBarGenerateStrategy(), ladderHeight, participantSize);
     }
 
     private int readLadderHeight() {
