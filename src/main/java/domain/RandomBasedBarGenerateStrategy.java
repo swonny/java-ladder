@@ -8,10 +8,10 @@ import java.util.Random;
 public class RandomBasedBarGenerateStrategy implements BarGenerateStrategy {
 
     @Override
-    public List<Boolean> generate(final int barCount) {
+    public List<Boolean> generate(final int width) {
         final List<Boolean> bars = new ArrayList<>();
         boolean previous = false;
-        for (int count = 0; count < barCount; count++) {
+        for (int i = 0; i < width; i++) {
             final boolean bar = createBar(previous);
             bars.add(bar);
             previous = bar;
