@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 public class InputView {
 
     private static final String PARTICIPANT_DELIMITER = ",";
+    private static final String GAME_RESULT_DELIMITER = ",";
 
     private final Scanner scanner;
 
@@ -25,6 +26,14 @@ public class InputView {
         final String participants = scanner.next();
 
         return Arrays.stream(participants.split(PARTICIPANT_DELIMITER))
+                     .collect(Collectors.toUnmodifiableList());
+    }
+
+    public List<String> readResult() {
+        System.out.println("실행 결과를 입력하세요. (결과는 쉼표(,)로 구분하세요)");
+        final String results = scanner.next();
+
+        return Arrays.stream(results.split(GAME_RESULT_DELIMITER))
                      .collect(Collectors.toUnmodifiableList());
     }
 }

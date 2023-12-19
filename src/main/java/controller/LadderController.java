@@ -25,14 +25,15 @@ public class LadderController {
 
     public void run() {
         final LadderService ladderService = initializeLadderService();
-        printLadder(ladderService.getLadder(), ladderService.getParticipants());
+        printLadder(ladderService.getLadder(), ladderService.getParticipants(), ladderService.getGameResults());
     }
 
     private LadderService initializeLadderService() {
         final List<Participant> participants = createParticipants();
+        final List<String> results = inputView.readResult();
         final Ladder ladder = createLadder(participants.size());
 
-        return new LadderService(ladder, participants);
+        return new LadderService(ladder, participants, results);
     }
 
     private List<Participant> createParticipants() {
@@ -44,17 +45,13 @@ public class LadderController {
     }
 
     private Ladder createLadder(final int participantSize) {
-        final int ladderHeight = readLadderHeight();
+        final int ladderHeight = inputView.readLadderHeight();
 
         return LadderFactory.of(new RandomBasedBarGenerateStrategy(), ladderHeight, participantSize);
     }
 
-    private int readLadderHeight() {
-        return inputView.readLadderHeight();
-    }
-
-    private void printLadder(final Ladder ladder, final List<Participant> participants) {
+    private void printLadder(final Ladder ladder, final List<Participant> participants, final List<String> gameResults) {
         final LadderDto ladderDto = LadderDto.from(ladder);
-        outputView.printLadder(ladderDto, participants);
+        outputView.printLadder(ladderDto, participants, gameResults);
     }
 }

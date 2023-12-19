@@ -12,10 +12,20 @@ public class OutputView {
 
     private final String LADDER_BAR_DELIMITER = "|";
 
-    public void printLadder(final LadderDto ladderDto, final List<Participant> participants) {
+    public void printLadder(
+            final LadderDto ladderDto,
+            final List<Participant> participants,
+            final List<String> gameResults
+    ) {
         final int maximumNameSize = calculateMaximumNameSize(participants);
         printParticipants(participants, maximumNameSize);
         printLines(ladderDto, maximumNameSize);
+        printGameResults(gameResults);
+    }
+
+    private void printGameResults(final List<String> gameResults) {
+        final String joinedResults = String.join(" ", gameResults);
+        System.out.println(joinedResults);
     }
 
     private int calculateMaximumNameSize(final List<Participant> participants) {
