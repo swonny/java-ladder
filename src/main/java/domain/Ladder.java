@@ -10,6 +10,16 @@ public class Ladder {
         this.lines = lines;
     }
 
+    public Position move(final Position position) {
+        Position currentPosition = position;
+        for (final Line line : lines) {
+            final int movedX = line.move(currentPosition);
+            currentPosition = new Position(movedX, lines.indexOf(line) + 1);
+        }
+
+        return currentPosition;
+    }
+
     public List<Line> getLines() {
         return lines;
     }
