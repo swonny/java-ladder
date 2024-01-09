@@ -40,7 +40,7 @@ public class LadderController {
         final List<String> participantNames = inputView.readParticipants();
 
         return participantNames.stream()
-                               .map(Participant::new)
+                               .map(ParticipantFactory::from)
                                .collect(Collectors.toUnmodifiableList());
     }
 
