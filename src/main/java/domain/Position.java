@@ -1,6 +1,5 @@
 package domain;
 
-import java.util.List;
 import java.util.Objects;
 
 public class Position {
@@ -17,15 +16,7 @@ public class Position {
         return new Position(this.x + x, this.y + y);
     }
 
-    public boolean isBiggerThan(final int x, final int y) {
-        return this.x > x || this.y > y;
-    }
-
-    public Line getCurrentLine(final List<Line> lines) {
-        return lines.get(y);
-    }
-
-    public int getCurrentX() {
+    public int getX() {
         return x;
     }
 
@@ -40,5 +31,13 @@ public class Position {
     @Override
     public int hashCode() {
         return Objects.hash(x, y);
+    }
+
+    @Override
+    public String toString() {
+        return "Position{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }
