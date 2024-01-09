@@ -7,8 +7,8 @@ import domain.Position;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class LadderService {
@@ -17,28 +17,21 @@ public class LadderService {
 
     private final Ladder ladder;
     private final List<Participant> participants;
-    private final HashMap<String, Participant> gameResults;
+    private final List<String> gameResults;
 
     public LadderService(final Ladder ladder, final List<Participant> participants, final List<String> gameResults) {
         this.ladder = ladder;
         this.participants = new ArrayList<>(participants);
-        this.gameResults = initializeGameResults(gameResults);
-    }
-
-    private HashMap<String, Participant> initializeGameResults(final List<String> gameResults) {
-        final LinkedHashMap<String, Participant> nonMatchedGameResults = new LinkedHashMap<>();
-        gameResults.forEach(gameResult -> nonMatchedGameResults.put(gameResult, null));
-
-        return nonMatchedGameResults;
+        this.gameResults = gameResults;
     }
 
     // TODO: 2024/01/09 participant가 위치를 알지 않고, Ladder 또는 LadderService가 알도록 하기
-    public void play() {
+    public Map<Participant, String> makeResult() {
         initializePosition();
-        for (final Participant participant : participants) {
-            final Position movedPosition = ladder.move(participant.getPosition());
-            participant.updatePosition(movedPosition);
-        }
+        moveParticipants();
+        final Map<Participant, String> gameResults = calculateResults();
+
+        return gameResults;
     }
 
     private void initializePosition() {
@@ -50,6 +43,30 @@ public class LadderService {
         }
     }
 
+    private void moveParticipants() {
+        for (final Participant participant : participants) {
+            final Position movedPosition = ladder.move(participant.getPosition());
+            participant.updatePosition(movedPosition);
+        }
+    }
+
+    private Map<Participant, String> calculateResults() {
+        final Map<Participant, String> gameResults = new HashMap<>();
+        for (final Participant participant : participants) {
+            final String matchingResult = findMatchingResult(participant);
+            gameResults.put(participant, matchingResult);
+        }
+
+        return Collections.unmodifiableMap(gameResults);
+    }
+
+    private String findMatchingResult(final Participant participant) {
+        final int participantXPosition = participant.getPosition()
+                                                    .getX();
+
+        return gameResults.get(participantXPosition);
+    }
+
     public Ladder getLadder() {
         return ladder;
     }
@@ -59,8 +76,7 @@ public class LadderService {
     }
 
     public List<String> getGameResults() {
-        return gameResults.keySet()
-                          .stream()
+        return gameResults.stream()
                           .collect(Collectors.toUnmodifiableList());
     }
 }

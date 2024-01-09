@@ -25,6 +25,10 @@ public class Participant {
         this.position = position;
     }
 
+    public boolean hasSameName(final String name) {
+        return this.name.equals(name);
+    }
+
     public String getName() {
         return name;
     }

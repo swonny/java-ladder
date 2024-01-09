@@ -38,7 +38,7 @@ class LadderServiceTest {
         final LadderService ladderService = new LadderService(사다리, 참가자들, 게임_결과);
 
         // when
-        ladderService.play();
+        ladderService.makeResult();
 
         // then
         assertSoftly(softAssertions -> {

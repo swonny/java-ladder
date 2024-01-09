@@ -4,13 +4,16 @@ import controller.dto.LadderDto;
 import domain.Participant;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static domain.Participant.MINIMUM_NAME_LENGTH;
 
 public class OutputView {
 
-    private final String LADDER_BAR_DELIMITER = "|";
+    private static final String GAME_RESULT_PREFIX = "실행 결과";
+    private static final String LADDER_BAR_DELIMITER = "|";
+    private static final String GAME_RESULT_DELIMITER = ":";
 
     public void printLadder(
             final LadderDto ladderDto,
@@ -52,6 +55,19 @@ public class OutputView {
                                         ).collect(Collectors.joining(LADDER_BAR_DELIMITER));
             System.out.println(LADDER_BAR_DELIMITER + lineView + LADDER_BAR_DELIMITER);
         }
+    }
+
+    public void printResult(final String gameResult) {
+        System.out.println(GAME_RESULT_PREFIX);
+        System.out.println(gameResult);
+    }
+
+    public void printAll(final Map<Participant, String> gameResults) {
+        System.out.println(GAME_RESULT_PREFIX);
+        gameResults.keySet()
+                   .stream()
+                   .map(participant -> String.join(GAME_RESULT_DELIMITER, participant.getName(), gameResults.get(participant)))
+                   .forEach(System.out::println);
     }
 
     enum LadderSymbol {
