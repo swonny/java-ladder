@@ -21,15 +21,17 @@ public class LadderController {
     private final InputView inputView;
     private final OutputView outputView;
 
+    private LadderService ladderService;
+
     public LadderController(final Scanner scanner) {
         this.inputView = new InputView(scanner);
         this.outputView = new OutputView();
     }
 
     public void run() {
-        final LadderService ladderService = initializeLadderService();
-        printLadder(ladderService.getLadder(), ladderService.getParticipants(), ladderService.getResults());
-        play(ladderService);
+        ladderService = initializeLadderService();
+        printLadder();
+        play();
     }
 
     private LadderService initializeLadderService() {
@@ -40,13 +42,6 @@ public class LadderController {
         return new LadderService(ladder, participants, results);
     }
 
-    private List<GameResult> createGameResults() {
-        return inputView.readResult()
-                        .stream()
-                        .map(GameResult::new)
-                        .collect(Collectors.toUnmodifiableList());
-    }
-
     private Participants createParticipants() {
         final List<String> participantNames = inputView.readParticipants();
 
@@ -55,18 +50,29 @@ public class LadderController {
                                .collect(Collectors.collectingAndThen(Collectors.toUnmodifiableList(), Participants::new));
     }
 
+    private List<GameResult> createGameResults() {
+        return inputView.readResult()
+                        .stream()
+                        .map(GameResult::new)
+                        .collect(Collectors.toUnmodifiableList());
+    }
+
     private Ladder createLadder(final int participantSize) {
         final int ladderHeight = inputView.readLadderHeight();
 
         return LadderFactory.of(new RandomBasedBarGenerateStrategy(), ladderHeight, participantSize);
     }
 
-    private void printLadder(final Ladder ladder, final List<Participant> participants, final List<GameResult> gameResults) {
+    private void printLadder() {
+        final Ladder ladder = ladderService.getLadder();
+        final List<Participant> participants = ladderService.getParticipants();
+        final List<GameResult> results = ladderService.getResults();
+
         final LadderDto ladderDto = LadderDto.from(ladder);
-        outputView.printLadder(ladderDto, participants, gameResults);
+        outputView.printLadder(ladderDto, participants, results);
     }
 
-    private void play(final LadderService ladderService) {
+    private void play() {
         ladderService.calculateResult();
         while (true) {
             final String participantName = inputView.readParticipantName();
