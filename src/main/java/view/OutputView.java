@@ -1,6 +1,7 @@
 package view;
 
 import controller.dto.LadderDto;
+import domain.GameResult;
 import domain.Participant;
 
 import java.util.List;
@@ -18,7 +19,7 @@ public class OutputView {
     public void printLadder(
             final LadderDto ladderDto,
             final List<Participant> participants,
-            final List<String> gameResults
+            final List<GameResult> gameResults
     ) {
         final int maximumNameSize = calculateMaximumNameSize(participants);
         printParticipants(participants, maximumNameSize);
@@ -26,8 +27,11 @@ public class OutputView {
         printGameResults(gameResults);
     }
 
-    private void printGameResults(final List<String> gameResults) {
-        final String joinedResults = String.join(" ", gameResults);
+    private void printGameResults(final List<GameResult> gameResults) {
+        final List<String> gameResultValues = gameResults.stream()
+                                                         .map(GameResult::getValue)
+                                                         .collect(Collectors.toUnmodifiableList());
+        final String joinedResults = String.join(" ", gameResultValues);
         System.out.println(joinedResults);
     }
 
@@ -62,11 +66,16 @@ public class OutputView {
         System.out.println(gameResult);
     }
 
-    public void printAll(final Map<Participant, String> gameResults) {
+    public void printAll(final Map<Participant, GameResult> gameResults) {
         System.out.println(GAME_RESULT_PREFIX);
         gameResults.keySet()
                    .stream()
-                   .map(participant -> String.join(GAME_RESULT_DELIMITER, participant.getName(), gameResults.get(participant)))
+                   .map(participant -> String.join(
+                           GAME_RESULT_DELIMITER,
+                           participant.getName(),
+                           gameResults.get(participant)
+                                      .getValue())
+                   )
                    .forEach(System.out::println);
     }
 

@@ -1,5 +1,6 @@
 package service;
 
+import domain.GameResult;
 import domain.Ladder;
 import domain.Participant;
 import domain.Position;
@@ -17,19 +18,19 @@ public class LadderService {
 
     private final Ladder ladder;
     private final List<Participant> participants;
-    private final List<String> gameResults;
+    private final List<GameResult> gameResults;
 
-    public LadderService(final Ladder ladder, final List<Participant> participants, final List<String> gameResults) {
+    public LadderService(final Ladder ladder, final List<Participant> participants, final List<GameResult> gameResults) {
         this.ladder = ladder;
         this.participants = new ArrayList<>(participants);
         this.gameResults = gameResults;
     }
 
     // TODO: 2024/01/09 participant가 위치를 알지 않고, Ladder 또는 LadderService가 알도록 하기
-    public Map<Participant, String> makeResult() {
+    public Map<Participant, GameResult> makeResult() {
         initializePosition();
         moveParticipants();
-        final Map<Participant, String> gameResults = calculateResults();
+        final Map<Participant, GameResult> gameResults = calculateResults();
 
         return gameResults;
     }
@@ -50,17 +51,17 @@ public class LadderService {
         }
     }
 
-    private Map<Participant, String> calculateResults() {
-        final Map<Participant, String> gameResults = new HashMap<>();
+    private Map<Participant, GameResult> calculateResults() {
+        final Map<Participant, GameResult> gameResults = new HashMap<>();
         for (final Participant participant : participants) {
-            final String matchingResult = findMatchingResult(participant);
+            final GameResult matchingResult = findMatchingResult(participant);
             gameResults.put(participant, matchingResult);
         }
 
         return Collections.unmodifiableMap(gameResults);
     }
 
-    private String findMatchingResult(final Participant participant) {
+    private GameResult findMatchingResult(final Participant participant) {
         final int participantXPosition = participant.getPosition()
                                                     .getX();
 
@@ -75,7 +76,7 @@ public class LadderService {
         return Collections.unmodifiableList(participants);
     }
 
-    public List<String> getGameResults() {
+    public List<GameResult> getGameResults() {
         return gameResults.stream()
                           .collect(Collectors.toUnmodifiableList());
     }

@@ -1,6 +1,7 @@
 package controller;
 
 import controller.dto.LadderDto;
+import domain.GameResult;
 import domain.Ladder;
 import domain.LadderFactory;
 import domain.Participant;
@@ -34,10 +35,17 @@ public class LadderController {
 
     private LadderService initializeLadderService() {
         final List<Participant> participants = createParticipants();
-        final List<String> results = inputView.readResult();
+        final List<GameResult> results = createGameResults();
         final Ladder ladder = createLadder(participants.size());
 
         return new LadderService(ladder, participants, results);
+    }
+
+    private List<GameResult> createGameResults() {
+        return inputView.readResult()
+                        .stream()
+                        .map(GameResult::new)
+                        .collect(Collectors.toUnmodifiableList());
     }
 
     private List<Participant> createParticipants() {
@@ -54,13 +62,13 @@ public class LadderController {
         return LadderFactory.of(new RandomBasedBarGenerateStrategy(), ladderHeight, participantSize);
     }
 
-    private void printLadder(final Ladder ladder, final List<Participant> participants, final List<String> gameResults) {
+    private void printLadder(final Ladder ladder, final List<Participant> participants, final List<GameResult> gameResults) {
         final LadderDto ladderDto = LadderDto.from(ladder);
         outputView.printLadder(ladderDto, participants, gameResults);
     }
 
     private void play(final LadderService ladderService) {
-        final Map<Participant, String> gameResults = ladderService.makeResult();
+        final Map<Participant, GameResult> gameResults = ladderService.makeResult();
         while (true) {
             final String participantName = inputView.readParticipantName();
             if (GameCommand.isFinished(participantName)) {
@@ -71,11 +79,11 @@ public class LadderController {
         }
     }
 
-    private void printParticipantResult(final Map<Participant, String> gameResults, final String participantName) {
+    private void printParticipantResult(final Map<Participant, GameResult> gameResults, final String participantName) {
         final Participant participant = Participants.findParticipant(participantName);
-        final String gameResult = gameResults.get(participant);
+        final GameResult gameResult = gameResults.get(participant);
 
-        outputView.printResult(gameResult);
+        outputView.printResult(gameResult.getValue());
     }
 
     private enum GameCommand {

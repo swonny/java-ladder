@@ -1,5 +1,6 @@
 package service;
 
+import domain.GameResult;
 import domain.Ladder;
 import domain.Line;
 import domain.Participant;
@@ -30,10 +31,10 @@ class LadderServiceTest {
         final Participant 제이미 = new Participant("제이미");
         final List<Participant> 참가자들 = List.of(승원, 엔초, 제이미);
 
-        final String 승원_결과 = "승원_결과";
-        final String 엔초_결과 = "엔초_결과";
-        final String 제이미_결과 = "제이미_결과";
-        final List<String> 게임_결과 = List.of(엔초_결과, 제이미_결과, 승원_결과);
+        final GameResult 승원_결과 = new GameResult("승원_결과");
+        final GameResult 엔초_결과 = new GameResult("엔초_결과");
+        final GameResult 제이미_결과 = new GameResult("제이미_결과");
+        final List<GameResult> 게임_결과 = List.of(엔초_결과, 제이미_결과, 승원_결과);
 
         final LadderService ladderService = new LadderService(사다리, 참가자들, 게임_결과);
 
