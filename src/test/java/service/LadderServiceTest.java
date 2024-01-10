@@ -4,6 +4,7 @@ import domain.GameResult;
 import domain.Ladder;
 import domain.Line;
 import domain.Participant;
+import domain.Participants;
 import domain.Position;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +30,7 @@ class LadderServiceTest {
         final Participant 승원 = new Participant("승원");
         final Participant 엔초 = new Participant("엔초");
         final Participant 제이미 = new Participant("제이미");
-        final List<Participant> 참가자들 = List.of(승원, 엔초, 제이미);
+        final Participants 참가자들 = new Participants(List.of(승원, 엔초, 제이미));
 
         final GameResult 승원_결과 = new GameResult("승원_결과");
         final GameResult 엔초_결과 = new GameResult("엔초_결과");
@@ -39,7 +40,7 @@ class LadderServiceTest {
         final LadderService ladderService = new LadderService(사다리, 참가자들, 게임_결과);
 
         // when
-        ladderService.makeResult();
+        ladderService.calculateResult();
 
         // then
         assertSoftly(softAssertions -> {

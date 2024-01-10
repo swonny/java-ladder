@@ -3,57 +3,41 @@ package service;
 import domain.GameResult;
 import domain.Ladder;
 import domain.Participant;
+import domain.Participants;
 import domain.Position;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class LadderService {
 
-    private static final int START_Y_POSITION = 0;
-
     private final Ladder ladder;
-    private final List<Participant> participants;
-    private final List<GameResult> gameResults;
+    private final Participants participants;
+    private final List<GameResult> results;
 
-    public LadderService(final Ladder ladder, final List<Participant> participants, final List<GameResult> gameResults) {
+    private Map<Participant, GameResult> gameResults;
+
+    public LadderService(final Ladder ladder, final Participants participants, final List<GameResult> results) {
         this.ladder = ladder;
-        this.participants = new ArrayList<>(participants);
-        this.gameResults = gameResults;
+        this.participants = participants;
+        this.results = results;
     }
 
     // TODO: 2024/01/09 participant가 위치를 알지 않고, Ladder 또는 LadderService가 알도록 하기
-    public Map<Participant, GameResult> makeResult() {
-        initializePosition();
-        moveParticipants();
-        final Map<Participant, GameResult> gameResults = calculateResults();
+    public void calculateResult() {
+        participants.initializePosition();
+        participants.moveParticipants(ladder);
+        final Map<Participant, Position> participantDestination = participants.findDestination();
+        final Map<Participant, GameResult> matchingResults = findMatchingResults(participantDestination);
 
-        return gameResults;
+        gameResults = matchingResults;
     }
 
-    private void initializePosition() {
-        for (int x = 0; x < participants.size(); x++) {
-            final Participant participant = participants.get(x);
-            // TODO: 2023/12/19 move 메서드를 사용해 setter를 대체해보기
-            final Position position = new Position(x, START_Y_POSITION);
-            participant.updatePosition(position);
-        }
-    }
-
-    private void moveParticipants() {
-        for (final Participant participant : participants) {
-            final Position movedPosition = ladder.move(participant.getPosition());
-            participant.updatePosition(movedPosition);
-        }
-    }
-
-    private Map<Participant, GameResult> calculateResults() {
+    public Map<Participant, GameResult> findMatchingResults(final Map<Participant, Position> participantsDestination) {
         final Map<Participant, GameResult> gameResults = new HashMap<>();
-        for (final Participant participant : participants) {
+        for (final Participant participant : participantsDestination.keySet()) {
             final GameResult matchingResult = findMatchingResult(participant);
             gameResults.put(participant, matchingResult);
         }
@@ -65,7 +49,12 @@ public class LadderService {
         final int participantXPosition = participant.getPosition()
                                                     .getX();
 
-        return gameResults.get(participantXPosition);
+        return results.get(participantXPosition);
+    }
+
+    public GameResult findResult(final String participantName) {
+        final Participant participant = participants.findParticipant(participantName);
+        return gameResults.get(participant);
     }
 
     public Ladder getLadder() {
@@ -73,11 +62,14 @@ public class LadderService {
     }
 
     public List<Participant> getParticipants() {
-        return Collections.unmodifiableList(participants);
+        return Collections.unmodifiableList(participants.getParticipants());
     }
 
-    public List<GameResult> getGameResults() {
-        return gameResults.stream()
-                          .collect(Collectors.toUnmodifiableList());
+    public List<GameResult> getResults() {
+        return Collections.unmodifiableList(results);
+    }
+
+    public Map<Participant, GameResult> getGameResults() {
+        return Collections.unmodifiableMap(gameResults);
     }
 }

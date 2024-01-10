@@ -5,7 +5,6 @@ import domain.GameResult;
 import domain.Ladder;
 import domain.LadderFactory;
 import domain.Participant;
-import domain.ParticipantFactory;
 import domain.Participants;
 import domain.RandomBasedBarGenerateStrategy;
 import service.LadderService;
@@ -29,12 +28,12 @@ public class LadderController {
 
     public void run() {
         final LadderService ladderService = initializeLadderService();
-        printLadder(ladderService.getLadder(), ladderService.getParticipants(), ladderService.getGameResults());
+        printLadder(ladderService.getLadder(), ladderService.getParticipants(), ladderService.getResults());
         play(ladderService);
     }
 
     private LadderService initializeLadderService() {
-        final List<Participant> participants = createParticipants();
+        final Participants participants = createParticipants();
         final List<GameResult> results = createGameResults();
         final Ladder ladder = createLadder(participants.size());
 
@@ -48,12 +47,12 @@ public class LadderController {
                         .collect(Collectors.toUnmodifiableList());
     }
 
-    private List<Participant> createParticipants() {
+    private Participants createParticipants() {
         final List<String> participantNames = inputView.readParticipants();
 
         return participantNames.stream()
-                               .map(ParticipantFactory::from)
-                               .collect(Collectors.toUnmodifiableList());
+                               .map(Participant::new)
+                               .collect(Collectors.collectingAndThen(Collectors.toUnmodifiableList(), Participants::new));
     }
 
     private Ladder createLadder(final int participantSize) {
@@ -68,22 +67,21 @@ public class LadderController {
     }
 
     private void play(final LadderService ladderService) {
-        final Map<Participant, GameResult> gameResults = ladderService.makeResult();
+        ladderService.calculateResult();
         while (true) {
             final String participantName = inputView.readParticipantName();
             if (GameCommand.isFinished(participantName)) {
+                final Map<Participant, GameResult> gameResults = ladderService.getGameResults();
                 outputView.printAll(gameResults);
                 break;
             }
-            printParticipantResult(gameResults, participantName);
+            printParticipantResult(ladderService, participantName);
         }
     }
 
-    private void printParticipantResult(final Map<Participant, GameResult> gameResults, final String participantName) {
-        final Participant participant = Participants.findParticipant(participantName);
-        final GameResult gameResult = gameResults.get(participant);
-
-        outputView.printResult(gameResult.getValue());
+    private void printParticipantResult(final LadderService ladderService, final String participantName) {
+        final GameResult result = ladderService.findResult(participantName);
+        outputView.printResult(result.getValue());
     }
 
     private enum GameCommand {
