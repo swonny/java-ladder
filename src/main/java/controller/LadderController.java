@@ -34,7 +34,7 @@ public class LadderController {
     public void run() {
         ladderService = initializeLadderService();
         printLadder();
-        play();
+        play(inputView.readParticipantName());
     }
 
     private LadderService initializeLadderService() {
@@ -73,17 +73,14 @@ public class LadderController {
         outputView.printLadder(ladderDto, participants, results);
     }
 
-    private void play() {
+    private void play(String gameCommand) {
         ladderService.calculateResult();
-        while (true) {
-            final String participantName = inputView.readParticipantName();
-            if (GameCommand.isFinished(participantName)) {
-                final Map<Participant, GameResult> participantResults = ladderService.getParticipantResults();
-                outputView.printAll(participantResults);
-                break;
-            }
-            printParticipantResult(ladderService, participantName);
+        while (GameCommand.isRunning(gameCommand)) {
+            printParticipantResult(ladderService, gameCommand);
+            gameCommand = inputView.readParticipantName();
         }
+        final Map<Participant, GameResult> participantResults = ladderService.getParticipantResults();
+        outputView.printAll(participantResults);
     }
 
     private void printParticipantResult(final LadderService ladderService, final String participantName) {
@@ -101,8 +98,8 @@ public class LadderController {
             this.value = value;
         }
 
-        public static boolean isFinished(final String participantName) {
-            return ALL.value.equals(participantName);
+        public static boolean isRunning(final String gameCommand) {
+            return !ALL.value.equals(gameCommand);
         }
     }
 }
