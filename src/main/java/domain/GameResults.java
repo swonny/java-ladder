@@ -33,4 +33,11 @@ public class GameResults {
     public List<GameResult> getGameResults() {
         return gameResults;
     }
+
+    public GameResult getGameResult(final String gameResultName) {
+        return gameResults.stream()
+                          .filter(gameResult -> gameResult.getValue().equals(gameResultName))
+                          .findAny()
+                          .orElseThrow(() -> new IllegalArgumentException("찾는 게임 결과가 없습니다."));
+    }
 }

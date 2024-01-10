@@ -21,7 +21,7 @@ public class Participant {
         }
     }
 
-    public void updatePosition(final Position position) {
+    public void move(final Position position) {
         this.position = position;
     }
 

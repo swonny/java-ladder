@@ -17,16 +17,16 @@ public class Participants {
     public void initializePosition() {
         for (int x = 0; x < participants.size(); x++) {
             final Participant participant = participants.get(x);
-            // TODO: 2023/12/19 move 메서드를 사용해 setter를 대체해보기
+            // TODO: 2024/01/10 move 메서드를 사용해 setter 대체해보기
             final Position position = new Position(x, START_Y_POSITION);
-            participant.updatePosition(position);
+            participant.move(position);
         }
     }
 
     public void moveParticipants(final Ladder ladder) {
         for (final Participant participant : participants) {
             final Position movedPosition = ladder.move(participant.getPosition());
-            participant.updatePosition(movedPosition);
+            participant.move(movedPosition);
         }
     }
 

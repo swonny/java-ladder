@@ -40,7 +40,7 @@ class ParticipantTest {
         final Position 참여자_위치 = new Position(0, 0);
 
         // when
-        참여자.updatePosition(참여자_위치);
+        참여자.move(참여자_위치);
 
         // then
         assertThat(참여자.getPosition())
