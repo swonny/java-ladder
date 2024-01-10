@@ -2,6 +2,7 @@ package controller;
 
 import controller.dto.LadderDto;
 import domain.GameResult;
+import domain.GameResults;
 import domain.Ladder;
 import domain.LadderFactory;
 import domain.Participant;
@@ -14,7 +15,9 @@ import view.OutputView;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 public class LadderController {
 
@@ -36,25 +39,24 @@ public class LadderController {
 
     private LadderService initializeLadderService() {
         final Participants participants = createParticipants();
-        final List<GameResult> results = createGameResults();
+        final GameResults results = createGameResults();
         final Ladder ladder = createLadder(participants.size());
 
         return new LadderService(ladder, participants, results);
     }
 
     private Participants createParticipants() {
-        final List<String> participantNames = inputView.readParticipants();
-
-        return participantNames.stream()
-                               .map(Participant::new)
-                               .collect(Collectors.collectingAndThen(Collectors.toUnmodifiableList(), Participants::new));
+        return inputView.readParticipants()
+                        .stream()
+                        .map(Participant::new)
+                        .collect(collectingAndThen(toUnmodifiableList(), Participants::new));
     }
 
-    private List<GameResult> createGameResults() {
+    private GameResults createGameResults() {
         return inputView.readResult()
                         .stream()
                         .map(GameResult::new)
-                        .collect(Collectors.toUnmodifiableList());
+                        .collect(collectingAndThen(toUnmodifiableList(), GameResults::new));
     }
 
     private Ladder createLadder(final int participantSize) {
@@ -64,11 +66,10 @@ public class LadderController {
     }
 
     private void printLadder() {
-        final Ladder ladder = ladderService.getLadder();
+        final LadderDto ladderDto = LadderDto.from(ladderService.getLadder());
         final List<Participant> participants = ladderService.getParticipants();
-        final List<GameResult> results = ladderService.getResults();
+        final List<GameResult> results = ladderService.getGameResults();
 
-        final LadderDto ladderDto = LadderDto.from(ladder);
         outputView.printLadder(ladderDto, participants, results);
     }
 
@@ -77,8 +78,8 @@ public class LadderController {
         while (true) {
             final String participantName = inputView.readParticipantName();
             if (GameCommand.isFinished(participantName)) {
-                final Map<Participant, GameResult> gameResults = ladderService.getGameResults();
-                outputView.printAll(gameResults);
+                final Map<Participant, GameResult> participantResults = ladderService.getParticipantResults();
+                outputView.printAll(participantResults);
                 break;
             }
             printParticipantResult(ladderService, participantName);

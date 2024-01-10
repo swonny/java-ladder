@@ -1,6 +1,7 @@
 package service;
 
 import domain.GameResult;
+import domain.GameResults;
 import domain.Ladder;
 import domain.Line;
 import domain.Participant;
@@ -35,7 +36,7 @@ class LadderServiceTest {
         final GameResult 승원_결과 = new GameResult("승원_결과");
         final GameResult 엔초_결과 = new GameResult("엔초_결과");
         final GameResult 제이미_결과 = new GameResult("제이미_결과");
-        final List<GameResult> 게임_결과 = List.of(엔초_결과, 제이미_결과, 승원_결과);
+        final GameResults 게임_결과 = new GameResults(List.of(엔초_결과, 제이미_결과, 승원_결과));
 
         final LadderService ladderService = new LadderService(사다리, 참가자들, 게임_결과);
 

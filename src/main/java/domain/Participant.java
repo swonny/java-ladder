@@ -36,4 +36,8 @@ public class Participant {
     public Position getPosition() {
         return position;
     }
+
+    public int getX() {
+        return position.getX();
+    }
 }
