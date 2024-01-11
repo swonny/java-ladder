@@ -16,6 +16,7 @@ public class OutputView {
     private static final String GAME_RESULT_PREFIX = "실행 결과";
     private static final String LADDER_BAR_DELIMITER = "|";
     private static final String GAME_RESULT_DELIMITER = ":";
+    private static final String ERROR_PREFIX = "[ERROR] ";
 
     public void printLadder(
             final LadderDto ladderDto,
@@ -87,17 +88,19 @@ public class OutputView {
                    .forEach(System.out::println);
     }
 
+    public void printExceptionMessage(final String message) {
+        System.out.println(ERROR_PREFIX + message);
+    }
+
     enum LadderSymbol {
 
-        SPACE(" ", false),
-        BAR("-", true);
+        SPACE(" "),
+        BAR("-");
 
         private final String symbol;
-        private final boolean isExist;
 
-        LadderSymbol(final String symbol, final boolean isExist) {
+        LadderSymbol(final String symbol) {
             this.symbol = symbol;
-            this.isExist = isExist;
         }
 
         public static String findSymbol(final boolean isExist) {

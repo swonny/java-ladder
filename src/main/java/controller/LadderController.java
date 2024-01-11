@@ -16,9 +16,7 @@ import view.OutputView;
 
 import java.util.List;
 import java.util.Scanner;
-
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toUnmodifiableList;
+import java.util.function.Supplier;
 
 public class LadderController {
 
@@ -41,25 +39,20 @@ public class LadderController {
     }
 
     private LadderService initializeLadderService() {
-        final Participants participants = createParticipants();
-        final GameResults results = createGameResults();
-        final Ladder ladder = createLadder(participants.size());
+        final Participants participants = readUntilValidInput(() -> Participants.from(inputView.readParticipants()));
+        final GameResults results = readUntilValidInput(() -> GameResults.from(inputView.readGameResults()));
+        final Ladder ladder = readUntilValidInput(() -> createLadder(participants.size()));
 
         return new LadderService(ladder, participants, results);
     }
 
-    private Participants createParticipants() {
-        return inputView.readParticipants()
-                        .stream()
-                        .map(Participant::new)
-                        .collect(collectingAndThen(toUnmodifiableList(), Participants::new));
-    }
-
-    private GameResults createGameResults() {
-        return inputView.readResult()
-                        .stream()
-                        .map(GameResult::new)
-                        .collect(collectingAndThen(toUnmodifiableList(), GameResults::new));
+    private <T> T readUntilValidInput(final Supplier<T> inputReader) {
+        try {
+            return inputReader.get();
+        } catch (final IllegalArgumentException exception) {
+            outputView.printExceptionMessage(exception.getMessage());
+            return readUntilValidInput(inputReader);
+        }
     }
 
     private Ladder createLadder(final int participantSize) {

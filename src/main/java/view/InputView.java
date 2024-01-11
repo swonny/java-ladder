@@ -29,7 +29,7 @@ public class InputView {
                      .collect(Collectors.toUnmodifiableList());
     }
 
-    public List<String> readResult() {
+    public List<String> readGameResults() {
         System.out.println("실행 결과를 입력하세요. (결과는 쉼표(,)로 구분하세요)");
         final String results = scanner.nextLine();
 

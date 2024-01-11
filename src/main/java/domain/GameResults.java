@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GameResults {
 
@@ -11,6 +12,12 @@ public class GameResults {
 
     public GameResults(final List<GameResult> gameResults) {
         this.gameResults = gameResults;
+    }
+
+    public static GameResults from(final List<String> gameResultNames) {
+        return gameResultNames.stream()
+                              .map(GameResult::new)
+                              .collect(Collectors.collectingAndThen(Collectors.toUnmodifiableList(), GameResults::new));
     }
 
     public Map<Participant, GameResult> findMatchingResults(final Participants participants) {

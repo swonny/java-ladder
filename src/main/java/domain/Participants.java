@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Participants {
 
@@ -11,8 +12,14 @@ public class Participants {
 
     private final List<Participant> participants;
 
-    public Participants(final List<Participant> participants) {
+    private Participants(final List<Participant> participants) {
         this.participants = participants;
+    }
+
+    public static Participants from(final List<String> participantNames) {
+        return participantNames.stream()
+                               .map(Participant::new)
+                               .collect(Collectors.collectingAndThen(Collectors.toUnmodifiableList(), Participants::new));
     }
 
     public void initializePosition() {
