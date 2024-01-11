@@ -27,7 +27,6 @@ public class Line {
         }
     }
 
-    // TODO: 2023/12/19 move로직 리팩터링 필요
     public int move(final Position position) {
         final int currentX = position.getX();
         if (isLeftMovable(currentX)) {
