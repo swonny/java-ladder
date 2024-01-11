@@ -25,11 +25,11 @@ public class ParticipantsFixture {
     }
 
     public static void move(final String participantName, final Position position) {
-        final Participant participant = participants.findParticipant(participantName);
+        final Participant participant = participants.findParticipant(participantName).get();
         participant.move(position);
     }
 
     public static Participant getParticipant(final String name) {
-        return participants.findParticipant(name);
+        return participants.findParticipant(name).get();
     }
 }
