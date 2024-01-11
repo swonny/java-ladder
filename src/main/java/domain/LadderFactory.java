@@ -1,17 +1,15 @@
 package domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 public class LadderFactory {
 
     public static Ladder of(final BarGenerateStrategy generateStrategy, final int height, final int participantCount) {
-        final List<Line> lines = new ArrayList<>();
-        for (int currentHeight = 0; currentHeight < height; currentHeight++) {
-            final Line newLine = LineFactory.from(generateStrategy, participantCount);
-            lines.add(newLine);
-        }
-
-        return new Ladder(lines);
+        return Stream.generate(() -> LineFactory.from(generateStrategy, participantCount))
+                     .limit(height)
+                     .collect(collectingAndThen(toUnmodifiableList(), Ladder::new));
     }
 }
