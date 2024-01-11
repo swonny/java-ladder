@@ -26,17 +26,4 @@ public class LadderDto {
     public List<List<Boolean>> getLadder() {
         return ladder;
     }
-
-    static class LineDto {
-
-        private final List<Boolean> bars;
-
-        LineDto(final List<Boolean> bars) {
-            this.bars = bars;
-        }
-
-        public List<Boolean> getBars() {
-            return bars;
-        }
-    }
 }
