@@ -1,14 +1,14 @@
 package domain;
 
-import domain.fixture.GameResultsFixture;
-import domain.fixture.ParticipantsFixture;
+import fixture.GameResultsFixture;
+import fixture.ParticipantsFixture;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
-import static domain.fixture.GameResultsFixture.getGameResult;
-import static domain.fixture.ParticipantsFixture.getParticipant;
+import static fixture.GameResultsFixture.getGameResult;
+import static fixture.ParticipantsFixture.getParticipant;
 
 class GameResultsTest {
 

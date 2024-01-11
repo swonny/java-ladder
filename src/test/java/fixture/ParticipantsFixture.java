@@ -1,4 +1,4 @@
-package domain.fixture;
+package fixture;
 
 import domain.Participant;
 import domain.Participants;
@@ -17,10 +17,9 @@ public class ParticipantsFixture {
     }
 
     public static Participants of(final String... participantNames) {
-        final List<Participant> unwrappedParticipants = Arrays.stream(participantNames)
-                                                     .map(Participant::new)
-                                                     .collect(toUnmodifiableList());
-        participants = new Participants(unwrappedParticipants);
+        final List<String> unwrappedParticipants = Arrays.stream(participantNames)
+                                                         .collect(toUnmodifiableList());
+        participants = Participants.from(unwrappedParticipants);
         return participants;
     }
 
