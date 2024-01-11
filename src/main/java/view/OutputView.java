@@ -1,6 +1,7 @@
 package view;
 
 import controller.dto.LadderDto;
+import controller.dto.ParticipantResultsDto;
 import domain.GameResult;
 import domain.Participant;
 
@@ -61,19 +62,26 @@ public class OutputView {
         }
     }
 
-    public void printResult(final String gameResult) {
+    public void printResult(final ParticipantResultsDto gameResult, final String participantName) {
         System.out.println(GAME_RESULT_PREFIX);
-        System.out.println(gameResult);
+        if (gameResult.isSingle()) {
+            printSingleResult(gameResult.getSingleResult(participantName));
+            return;
+        }
+        printMultipleResults(gameResult.getParticipantResults());
     }
 
-    public void printAll(final Map<Participant, GameResult> gameResults) {
-        System.out.println(GAME_RESULT_PREFIX);
+    public void printSingleResult(final GameResult gameResult) {
+        System.out.println(gameResult.getValue());
+    }
+
+    public void printMultipleResults(final Map<String, GameResult> gameResults) {
         gameResults.keySet()
                    .stream()
-                   .map(participant -> String.join(
+                   .map(participantName -> String.join(
                            GAME_RESULT_DELIMITER,
-                           participant.getName(),
-                           gameResults.get(participant)
+                           participantName,
+                           gameResults.get(participantName)
                                       .getValue())
                    )
                    .forEach(System.out::println);

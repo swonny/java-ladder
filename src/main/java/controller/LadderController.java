@@ -1,11 +1,13 @@
 package controller;
 
 import controller.dto.LadderDto;
+import controller.dto.ParticipantResultsDto;
 import domain.GameResult;
 import domain.GameResults;
 import domain.Ladder;
 import domain.LadderFactory;
 import domain.Participant;
+import domain.ParticipantResults;
 import domain.Participants;
 import domain.RandomBasedBarGenerateStrategy;
 import service.LadderService;
@@ -13,7 +15,6 @@ import view.InputView;
 import view.OutputView;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 
 import static java.util.stream.Collectors.collectingAndThen;
@@ -34,7 +35,9 @@ public class LadderController {
     public void run() {
         ladderService = initializeLadderService();
         printLadder();
-        play(inputView.readParticipantName());
+
+        final ParticipantResults results = ladderService.calculateResult();
+        printResult(results);
     }
 
     private LadderService initializeLadderService() {
@@ -73,24 +76,23 @@ public class LadderController {
         outputView.printLadder(ladderDto, participants, results);
     }
 
-    private void play(String gameCommand) {
-        ladderService.calculateResult();
-        while (GameCommand.isRunning(gameCommand)) {
-            printParticipantResult(ladderService, gameCommand);
-            gameCommand = inputView.readParticipantName();
+    private void printResult(final ParticipantResults results) {
+        GameCommand gameCommand = GameCommand.RUN;
+        while (gameCommand.isRunning()) {
+            final String participantName = inputView.readParticipantName();
+            printParticipantResult(results, participantName);
+            gameCommand = GameCommand.from(participantName);
         }
-        final Map<Participant, GameResult> participantResults = ladderService.getParticipantResults();
-        outputView.printAll(participantResults);
     }
 
-    private void printParticipantResult(final LadderService ladderService, final String participantName) {
-        final GameResult result = ladderService.findResult(participantName);
-        outputView.printResult(result.getValue());
+    private void printParticipantResult(final ParticipantResults results, final String participantName) {
+        final ParticipantResultsDto participantResults = ParticipantResultsDto.from(results, participantName);
+        outputView.printResult(participantResults, participantName);
     }
 
     private enum GameCommand {
         RUN("run"),
-        ALL("all");
+        STOP("all");
 
         private final String value;
 
@@ -98,8 +100,15 @@ public class LadderController {
             this.value = value;
         }
 
-        public static boolean isRunning(final String gameCommand) {
-            return !ALL.value.equals(gameCommand);
+        public static GameCommand from(final String input) {
+            if (input.equals(STOP.value)) {
+                return STOP;
+            }
+            return RUN;
+        }
+
+        public boolean isRunning() {
+            return this.equals(RUN);
         }
     }
 }

@@ -3,6 +3,7 @@ package domain;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class Participants {
 
@@ -30,11 +31,10 @@ public class Participants {
         }
     }
 
-    public Participant findParticipant(final String name) {
+    public Optional<Participant> findParticipant(final String name) {
         return participants.stream()
                            .filter(participant -> participant.hasSameName(name))
-                           .findAny()
-                           .orElseThrow(() -> new IllegalArgumentException("등록된 사용자가 없습니다."));
+                           .findAny();
     }
 
     public Map<Participant, Position> findDestination() {
