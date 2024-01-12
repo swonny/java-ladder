@@ -1,5 +1,6 @@
 package fixture;
 
+import domain.Name;
 import domain.Participant;
 import domain.Participants;
 import domain.Position;
@@ -24,11 +25,11 @@ public class ParticipantsFixture {
     }
 
     public static void move(final String participantName, final Position position) {
-        final Participant participant = participants.findParticipant(participantName).get();
+        final Participant participant = participants.findParticipant(new Name(participantName)).get();
         participant.move(position);
     }
 
     public static Participant getParticipant(final String name) {
-        return participants.findParticipant(name).get();
+        return participants.findParticipant(new Name(name)).get();
     }
 }

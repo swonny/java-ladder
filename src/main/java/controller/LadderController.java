@@ -6,7 +6,7 @@ import domain.GameResult;
 import domain.GameResults;
 import domain.Ladder;
 import domain.LadderFactory;
-import domain.Participant;
+import domain.Name;
 import domain.ParticipantResults;
 import domain.Participants;
 import domain.RandomBasedBarGenerateStrategy;
@@ -72,13 +72,13 @@ public class LadderController {
     private void printResult(final ParticipantResults results) {
         GameCommand gameCommand = GameCommand.RUN;
         while (gameCommand.isRunning()) {
-            final String participantName = inputView.readParticipantName();
-            printParticipantResult(results, participantName);
+            final Name participantName = new Name(inputView.readParticipantName());
+            printResult(results, participantName);
             gameCommand = GameCommand.from(participantName);
         }
     }
 
-    private void printParticipantResult(final ParticipantResults results, final String participantName) {
+    private void printResult(final ParticipantResults results, final Name participantName) {
         final ParticipantResultsDto participantResults = ParticipantResultsDto.from(results, participantName);
         outputView.printResult(participantResults, participantName);
     }
@@ -93,8 +93,8 @@ public class LadderController {
             this.value = value;
         }
 
-        public static GameCommand from(final String input) {
-            if (input.equals(STOP.value)) {
+        public static GameCommand from(final Name input) {
+            if (input.contains(STOP.value)) {
                 return STOP;
             }
             return RUN;

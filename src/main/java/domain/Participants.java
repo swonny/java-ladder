@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toUnmodifiableList;
 
 public class Participants {
 
@@ -18,8 +20,8 @@ public class Participants {
 
     public static Participants from(final List<String> participantNames) {
         return participantNames.stream()
-                               .map(Participant::new)
-                               .collect(Collectors.collectingAndThen(Collectors.toUnmodifiableList(), Participants::new));
+                               .map(name -> new Participant(new Name(name)))
+                               .collect(collectingAndThen(toUnmodifiableList(), Participants::new));
     }
 
     public void initializePosition() {
@@ -38,7 +40,7 @@ public class Participants {
         }
     }
 
-    public Optional<Participant> findParticipant(final String name) {
+    public Optional<Participant> findParticipant(final Name name) {
         return participants.stream()
                            .filter(participant -> participant.hasSameName(name))
                            .findAny();
@@ -55,7 +57,16 @@ public class Participants {
         return participants.size();
     }
 
-    public List<Participant> getParticipants() {
-        return participants;
+    public Names getNames() {
+        return participants.stream()
+                           .map(Participant::getName)
+                           .collect(collectingAndThen(toUnmodifiableList(), Names::new));
+    }
+
+    public int calculateMaximumNameSize() {
+        final Names names = participants.stream()
+                                        .map(Participant::getName)
+                                        .collect(collectingAndThen(toUnmodifiableList(), Names::new));
+        return names.calculateMaximumNameSize();
     }
 }

@@ -12,7 +12,7 @@ public class ParticipantResults {
         this.participantResults = participantResults;
     }
 
-    public boolean isPresent(final String participantName) {
+    public boolean isPresent(final Name participantName) {
         final long participantCount = participantResults.keySet()
                                                         .stream()
                                                         .filter(participant -> participant.hasSameName(participantName))
@@ -25,7 +25,7 @@ public class ParticipantResults {
         return participantResults;
     }
 
-    public GameResult getResult(final String participantName) {
+    public GameResult getResult(final Name participantName) {
         return participantResults.keySet()
                                  .stream()
                                  .filter(participant -> participant.hasSameName(participantName))

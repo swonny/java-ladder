@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static domain.Participant.MINIMUM_NAME_LENGTH;
-
 public class OutputView {
 
     private static final String GAME_RESULT_PREFIX = "실행 결과";
@@ -55,7 +53,7 @@ public class OutputView {
         }
     }
 
-    public void printResult(final ParticipantResultsDto gameResult, final String participantName) {
+    public void printResult(final ParticipantResultsDto gameResult, final Name participantName) {
         System.out.println(GAME_RESULT_PREFIX);
         if (gameResult.isSingle()) {
             printSingleResult(gameResult.getSingleResult(participantName));
@@ -68,12 +66,12 @@ public class OutputView {
         System.out.println(gameResult.getValue());
     }
 
-    public void printMultipleResults(final Map<String, GameResult> gameResults) {
+    public void printMultipleResults(final Map<Name, GameResult> gameResults) {
         gameResults.keySet()
                    .stream()
                    .map(participantName -> String.join(
                            GAME_RESULT_DELIMITER,
-                           participantName,
+                           participantName.getName(),
                            gameResults.get(participantName)
                                       .getValue())
                    )
