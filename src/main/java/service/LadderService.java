@@ -33,8 +33,8 @@ public class LadderService {
         return ladder;
     }
 
-    public List<Participant> getParticipants() {
-        return Collections.unmodifiableList(participants.getParticipants());
+    public Participants getParticipants() {
+        return participants;
     }
 
     public List<GameResult> getGameResults() {

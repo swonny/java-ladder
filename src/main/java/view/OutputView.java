@@ -3,7 +3,8 @@ package view;
 import controller.dto.LadderDto;
 import controller.dto.ParticipantResultsDto;
 import domain.GameResult;
-import domain.Participant;
+import domain.Name;
+import domain.Participants;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,11 @@ public class OutputView {
 
     public void printLadder(
             final LadderDto ladderDto,
-            final List<Participant> participants,
+            final Participants participants,
             final List<GameResult> gameResults
     ) {
-        final int maximumNameSize = calculateMaximumNameSize(participants);
-        printParticipants(participants, maximumNameSize);
+        final int maximumNameSize = participants.calculateMaximumNameSize();
+        printParticipants(participants);
         printLines(ladderDto, maximumNameSize);
         printGameResults(gameResults);
     }
@@ -37,18 +38,9 @@ public class OutputView {
         System.out.println(joinedResults);
     }
 
-    private int calculateMaximumNameSize(final List<Participant> participants) {
-        return participants.stream()
-                           .map(Participant::getName)
-                           .mapToInt(String::length)
-                           .max()
-                           .orElse(MINIMUM_NAME_LENGTH);
-    }
-
-    private void printParticipants(final List<Participant> participants, final int maximumNameLength) {
-        final String participantsView = participants.stream()
-                                                    .map(Participant::getName)
-                                                    .collect(Collectors.joining(LadderSymbol.SPACE.symbol));
+    private void printParticipants(final Participants participants) {
+        final String participantsView = participants.getNames()
+                                                    .joining(LadderSymbol.SPACE.symbol);
         System.out.println(participantsView);
     }
 

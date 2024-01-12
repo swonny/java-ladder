@@ -63,7 +63,7 @@ public class LadderController {
 
     private void printLadder() {
         final LadderDto ladderDto = LadderDto.from(ladderService.getLadder());
-        final List<Participant> participants = ladderService.getParticipants();
+        final Participants participants = ladderService.getParticipants();
         final List<GameResult> results = ladderService.getGameResults();
 
         outputView.printLadder(ladderDto, participants, results);
