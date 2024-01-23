@@ -1,7 +1,5 @@
 package domain;
 
-import static java.lang.String.format;
-
 public class Participant {
 
     private final Name name;
@@ -29,5 +27,13 @@ public class Participant {
 
     public int getX() {
         return position.getX();
+    }
+
+    @Override
+    public String toString() {
+        return "Participant{" +
+                "name=" + name +
+                ", position=" + position +
+                '}';
     }
 }

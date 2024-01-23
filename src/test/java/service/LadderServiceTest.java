@@ -1,12 +1,14 @@
 package service;
 
+import domain.BarGenerateStrategy;
 import domain.GameResults;
 import domain.Ladder;
-import domain.Line;
+import domain.LadderFactory;
 import domain.Participants;
 import domain.Position;
 import fixture.GameResultsFixture;
 import fixture.ParticipantsFixture;
+import fixture.TestRandomBarGenerator;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -24,10 +26,8 @@ class LadderServiceTest {
     @Test
     void 게임을_실행하면_결과를_저장한다() {
         // given
-        final Line 첫번째_줄 = new Line(List.of(true, false));
-        final Line 두번째_줄 = new Line(List.of(false, true));
-        final Ladder 사다리 = new Ladder(List.of(첫번째_줄, 두번째_줄));
-
+        final BarGenerateStrategy barGenerator = new TestRandomBarGenerator(List.of(true, false, true)); // true, false, false, true
+        final Ladder 사다리 = LadderFactory.of(barGenerator, 2, 3);
         final Participants 참가자들 = ParticipantsFixture.of("승원", "엔초", "제이미");
         final GameResults 게임_결과 = GameResultsFixture.of("승원_결과", "엔초_결과", "제이미_결과");
 

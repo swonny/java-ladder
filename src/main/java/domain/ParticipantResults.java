@@ -33,4 +33,11 @@ public class ParticipantResults {
                                  .findAny()
                                  .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 사용자입니다."));
     }
+
+    @Override
+    public String toString() {
+        return "ParticipantResults{" +
+                "participantResults=" + participantResults +
+                '}';
+    }
 }

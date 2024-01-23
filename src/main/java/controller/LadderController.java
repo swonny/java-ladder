@@ -9,7 +9,7 @@ import domain.LadderFactory;
 import domain.Name;
 import domain.ParticipantResults;
 import domain.Participants;
-import domain.RandomBasedBarGenerateStrategy;
+import domain.RandomBarGenerator;
 import service.LadderService;
 import view.InputView;
 import view.OutputView;
@@ -58,7 +58,7 @@ public class LadderController {
     private Ladder createLadder(final int participantSize) {
         final int ladderHeight = inputView.readLadderHeight();
 
-        return LadderFactory.of(new RandomBasedBarGenerateStrategy(), ladderHeight, participantSize);
+        return LadderFactory.of(new RandomBarGenerator(), ladderHeight, participantSize);
     }
 
     private void printLadder() {

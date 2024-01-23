@@ -5,9 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class RandomBasedBarGenerateStrategy implements BarGenerateStrategy {
+public class RandomBasedBarGenerateStrategy {
 
-    @Override
     public List<Boolean> generate(final int width) {
         final List<Boolean> bars = new ArrayList<>();
         boolean previous = false;

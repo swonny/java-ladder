@@ -26,4 +26,11 @@ public class GameResult {
     public int hashCode() {
         return Objects.hash(value);
     }
+
+    @Override
+    public String toString() {
+        return "GameResult{" +
+                "value='" + value + '\'' +
+                '}';
+    }
 }
